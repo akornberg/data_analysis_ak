@@ -1,4 +1,3 @@
-#We currently have 3 IBD runs and Seurat Objects that need to be merged. We will merge the objects together and then split to follow the Seurat Vignette.
 #Run scTransform individually for each object. 
 library(ggplot2)
 library(Seurat)
@@ -123,11 +122,11 @@ DimPlot(ibd.merged, group.by = "dx", pt.size = 0.5) +
   scale_color_manual(values=c("navy", "peru", "navy", "gray90")) 
 
 ##GEX PLOT##
-FeaturePlot(ibd.merged, features = c("KLRD1"),ncol= 2, min.cutoff = 0, max.cutoff = ) 
+FeaturePlot(ibd.merged, features = c("TCF7"),ncol= 1, min.cutoff = 0, max.cutoff = ) 
 scale_color_gradient(low="gray90",high="forestgreen", na.value = "gray90") 
 
 ##AdT PLOT##
-FeaturePlot(ibd.merged, features = c("adt_PD1"), ncol= 1, min.cutoff = "q20", max.cutoff = "q95")
+FeaturePlot(ibd.merged, features = c("adt_CD69"), ncol= 1, min.cutoff = "q60", max.cutoff = "q95")
 
 #compare AdT normalization strategies
 
@@ -347,12 +346,7 @@ CombinePlots(plots = list(cd28,klrg1,tcr ), ncol = 3)
 
 EnhancedVolcano(cluster.5.3, lab=rownames(cluster.5.3), x = "avg_logFC", y = "p_val", FCcutoff = 1,pCutoff = 10e-7,
                 title = "Differential Gene Expression", subtitle= "Non-inflamed (Left) vs. Inflamed (Right)", ylim = c(0,40),
-                col = c("gray50", "gray50", "gray50", "firebrick"), drawConnectors = TRUE,widthConnectors = 0.75,    labCol = 'black',
-                labFace = 'bold',
-                boxedLabels = TRUE,
-                legendPosition = "top",
-                labSize = 7.5,
-                selectLab = c("EOMES","TMIGD2", "KLRG1","CD27", "CXCR3", "PRF1", "GZMK", "GZMA", "IL7R", "KLRC1", "CCR9"))
+                col = c("gray50", "gray50", "gray50", "firebrick"))
 ###Cluster ID List###
 # 0 - TIGIT high - Treg-like?
 # 1 - Highly activated, low cytotoxicity
@@ -380,10 +374,10 @@ ibd.merged$cluster.label <- ifelse((ibd.merged$seurat_clusters == 0), "0 - TIGIT
 
 DimPlot(ibd.merged, label = FALSE, pt.size = 0.75, group.by = "cluster.label") + ggtitle("UMAP Clusters") + theme(plot.title = element_text(hjust = 0.5),legend.text = element_text(size=15, face ="bold")) + guides(colour = guide_legend(override.aes = list(size=7.5)))
 
-FeaturePlot(ibd.merged, features = c("ITGB7"),ncol= 3, min.cutoff = 0, max.cutoff = ) 
+FeaturePlot(ibd.merged, features = c("IL17F"),ncol= 1, min.cutoff = 0, max.cutoff = 1) 
 scale_color_gradient(low="gray90",high="forestgreen", na.value = "gray90") 
 
-FeaturePlot(ibd.merged, features = c("adt_TNFR2"), ncol= 1, min.cutoff = "q20", max.cutoff = "q95") + ggtitle("ADT TNFR2")
+FeaturePlot(ibd.merged, features = c("adt_ICOS"), ncol= 1, min.cutoff = "q20", max.cutoff = "q95")
 
 ibd.merged$stim.c6.c4 <- ifelse((ibd.merged$stim.status == "nonstim"), "nonstim",
                          ifelse(ibd.merged$seurat_clusters == 4, 4,
