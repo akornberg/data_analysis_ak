@@ -5,15 +5,20 @@ library(tidyverse)
 library(data.table)
 library(corrplot)
 
-DimPlot(sr.merged.cd4, label = TRUE, pt.size =0.5) 
+DimPlot(sr.merged.cd8, label = TRUE, pt.size =0.5) 
+
+#Stash Row Names
+sr.merged.cd4$row.names <- row.names(sr.merged.cd4@meta.data)
+sr.merged.cd8$row.names <- row.names(sr.merged.cd8@meta.data)
 
 #Improve CDR3B Count
 tcr.count <- sr.merged.cd4@meta.data %>% group_by(mouse,cdr3b) %>% summarise(count = n())
 sr.merged.cd4@meta.data <- merge(sr.merged.cd4@meta.data, tcr.count)
+row.names(sr.merged.cd4@meta.data) <- sr.merged.cd4$row.names 
 
 tcr.count <- sr.merged.cd8@meta.data %>% group_by(mouse,cdr3b) %>% summarise(count = n())
 sr.merged.cd8@meta.data <- merge(sr.merged.cd8@meta.data, tcr.count)
-
+row.names(sr.merged.cd8@meta.data) <- sr.merged.cd8$row.names 
 # tcrs is relavant TCR data frame from Samhita's merged CD4 dataset. All NA's have been removed.
 tcrs <- subset(sr.merged.cd4@meta.data, subset = cdr3.count >= 0)
 
